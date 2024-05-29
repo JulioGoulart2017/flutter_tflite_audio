@@ -29,6 +29,8 @@ apply plugin: 'com.android.library'
 android {
     compileSdkVersion 31
 
+    namespace 'flutter.tflite_audio'
+
     defaultConfig {
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
