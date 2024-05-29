@@ -17,7 +17,7 @@ void main() {
 
   group('loadModel() test', () {
     setUp(() async {
-      channel.setMockMethodCallHandler((methodCall) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, (methodCall) async {
         log.add(methodCall);
         return '';
       });
@@ -25,7 +25,7 @@ void main() {
     });
 
     tearDown(() {
-      channel.setMockMethodCallHandler(null);
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(channel, null);
     });
 
     test('passes optional and required arguments correctly', () async {

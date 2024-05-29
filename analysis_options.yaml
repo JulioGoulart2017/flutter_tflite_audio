@@ -24,3 +24,4 @@ analyzer:
     close_sinks: ignore
     missing_return: error
     dead_code: warning
+    lines_longer_than_80_chars: ignore

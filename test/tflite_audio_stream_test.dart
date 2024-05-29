@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 /*
 event streams
 https://github.com/befovy/fijkplayer/blob/58503f3f2591d41437bef61478de57b7527dff98/test/fijkplayer_test.dart
@@ -17,34 +19,29 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
 
   setUp(() {
-    eventChannel.setMockMethodCallHandler((methodCall) async {
-      await ServicesBinding.instance!.defaultBinaryMessenger
-          .handlePlatformMessage(
-              'startAudioRecognition',
-              const StandardMethodCodec()
-                  .encodeSuccessEnvelope(<dynamic, dynamic>{
-                'hasPermission': 'true',
-                'inferenceTime': '189',
-                'recognitionResult': 'no'
-              }),
-              (data) {});
-    });
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+      eventChannel,
+      (methodCall) async {
+        return ServicesBinding.instance.channelBuffers.push(
+          'startAudioRecognition',
+          const StandardMethodCodec().encodeSuccessEnvelope(
+            <String, dynamic>{'hasPermission': 'true', 'inferenceTime': '189', 'recognitionResult': 'no'},
+          ),
+          (data) {},
+        );
+      },
+    );
   });
 
   tearDown(() {
-    eventChannel.setMockMethodCallHandler(null);
+    TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(eventChannel, null);
   });
 
   test('returns a map stream correctly', () async {
-    var value = TfliteAudio.startAudioRecognition(
-        sampleRate: 16000, audioLength: 16000, bufferSize: 2000);
+    var value = TfliteAudio.startAudioRecognition(sampleRate: 16000, audioLength: 16000, bufferSize: 2000);
 
     value.listen(expectAsync1((event) {
-      expect(event, <dynamic, dynamic>{
-        'hasPermission': 'true',
-        'inferenceTime': '189',
-        'recognitionResult': 'no'
-      });
+      expect(event, <dynamic, dynamic>{'hasPermission': 'true', 'inferenceTime': '189', 'recognitionResult': 'no'});
     }));
   });
 }
